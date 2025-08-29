@@ -74,9 +74,9 @@
                 ctx.fillText(text, x, y);
 
                 // If a drop has reached the bottom of the screen, reset it to the top.
-                // We add a bit of randomness (Math.random() > 0.975) to make the columns
+                // We add a bit of randomness (Math.random() > 0.976) to make the columns
                 // reset at different times, creating a more staggered and realistic effect.
-                if (y > canvas.height && Math.random() > 0.975) {
+                if (y > canvas.height && Math.random() > 0.976) {
                     drops[i] = 0;
                 }
 
