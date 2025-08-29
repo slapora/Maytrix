@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Digital Rain</title>
+    <style>
+        /* Basic reset to remove default margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbars */
+            background-color: #000; /* Black background */
+        }
+
+        /* Style for the canvas to make it fill the entire screen */
+        #matrixCanvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- The canvas element is where the animation will be drawn -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <script>
+        // Get the canvas element and its 2D rendering context
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set the canvas to fill the browser window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // The characters to be used in the rain.
+        // Using Katakana, numbers, and some symbols for the classic Matrix look.
+        const characters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789';
+        const charactersArray = characters.split('');
+
+        // Set the font size for the characters
+        const fontSize = 14;
+        // Calculate the number of columns based on the canvas width and font size
+        const columns = Math.floor(canvas.width / fontSize);
+
+        // Create an array to track the y-position of each falling character drop.
+        // Each index in the array represents a column.
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        // The main animation function
+        function draw() {
+            // Fill the canvas with a semi-transparent black rectangle.
+            // This creates the fading trail effect for the characters.
+            // The lower the alpha (0.05), the longer the trails.
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set the color and font for the falling characters
+            ctx.fillStyle = '#0F0'; // A bright green color
+            ctx.font = fontSize + 'px monospace';
+
+            // Loop through each column (each drop)
+            for (let i = 0; i < drops.length; i++) {
+                // Get a random character from our character set
+                const text = charactersArray[Math.floor(Math.random() * charactersArray.length)];
+
+                // Calculate the x and y coordinates to draw the character
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+
+                // Draw the character on the canvas
+                ctx.fillText(text, x, y);
+
+                // If a drop has reached the bottom of the screen, reset it to the top.
+                // We add a bit of randomness (Math.random() > 0.975) to make the columns
+                // reset at different times, creating a more staggered and realistic effect.
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                // Increment the y-position to move the drop down for the next frame
+                drops[i]++;
+            }
+        }
+
+        // Start the animation loop, running the draw function every 33 milliseconds (about 30 FPS)
+        setInterval(draw, 33);
+
+        // Add an event listener to handle window resizing
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate columns and reset drops array if needed, but for simplicity,
+            // a page refresh on resize is the easiest way to handle it perfectly.
+            // For a more robust solution, you would re-initialize the columns and drops array here.
+            location.reload(); 
+        });
+    </script>
+</body>
+</html>
